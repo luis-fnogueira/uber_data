@@ -14,7 +14,7 @@ class Postgres:
         
         self.__CREDENTIALS = credentials
 
-        self.__URI = f"postgresql://{credentials['user']}:{credentials['password']}@{credentials['host']}:{credentials['port']}/{credentials['database']}"
+        self.URI = f"postgresql://{credentials['user']}:{credentials['password']}@{credentials['host']}:{credentials['port']}/{credentials['database']}"
 
 
     def __get_conn(self):
@@ -73,7 +73,7 @@ class Postgres:
             
             data.to_sql(
                 name      = table_name,
-                con       = create_engine(self.__URI),
+                con       = create_engine(self.URI),
                 schema    = schema,
                 if_exists = "append",
                 index     = False,

@@ -20,3 +20,23 @@ class Transform:
         """
 
         df[cols] = df[cols].apply(lambda s: s.str.replace("\+0000 UTC", ""))
+
+
+    @staticmethod
+    def remove_not_completed(dataframe: pd.DataFrame) -> None:
+
+        """
+        This function removes the trips that were not completed.
+
+        Args:
+            dataframe: pd.Dataframe. The dataframe itself
+
+        Returns:
+
+            Drops non completed rows        
+        """
+
+        for index in dataframe.index:
+
+            # Removing non completed trips
+            dataframe.drop(dataframe[dataframe['Trip or Order Status'] != "COMPLETED"].index, inplace = True)
