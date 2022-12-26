@@ -71,7 +71,6 @@ class Transform:
             Changes the City column based on a condition
         """
 
-
         for index in dataframe.index:
 
             if re.search("Jundiaí", dataframe.loc[index, "Dropoff Address"]):
