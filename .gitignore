@@ -1,4 +1,4 @@
-trips_data.csv
+original_trips_data.csv
 .env
 logs/*
 __pycache__
