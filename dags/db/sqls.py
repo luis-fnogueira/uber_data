@@ -1,13 +1,12 @@
 ### Queries used to create tables
 
-class CreateTables:
+class Sqls:
 
-    RAW_DATA = """
+    CREATE_TABLE_RAW_DATA = """
     
-    DROP TABLE uber_data.raw_data;
 
-    CREATE TABLE uber_data.raw_data (
-	city varchar NULL,
+    CREATE TABLE IF NOT EXISTS uber_data.raw_data (
+	"City" varchar NULL,
 	"Product Type" varchar NULL,
 	"Trip or Order Status" varchar NULL,
 	"Request Time" timestamp NULL,
