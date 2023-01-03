@@ -21,7 +21,6 @@ class Sqls:
     "Fare Currency" varchar NULL
     );"""
 
-
     READ_RAW_DATA = "SELECT * FROM uber_data.raw_data;"
 
     CREATE_TABLE_STRUCTURED_DATA = """

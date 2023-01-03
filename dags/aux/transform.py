@@ -1,14 +1,14 @@
 import re
 import pandas as pd
 
-class Transform:
 
+class Transform:
     @staticmethod
     def remove_tmz(cols: list, df: pd.DataFrame) -> None:
 
         """
         This functions remove a substring from the uber_data dataframe.
-        
+
         Args:
 
             cols: list. The columns that need to be applied
@@ -17,11 +17,10 @@ class Transform:
         Returns:
 
             It changes data in a dataframe.
-        
+
         """
 
         df[cols] = df[cols].apply(lambda s: s.str.replace("\+0000 UTC", ""))
-
 
     @staticmethod
     def remove_not_completed(dataframe: pd.DataFrame) -> None:
@@ -34,29 +33,32 @@ class Transform:
 
         Returns:
 
-            Drops non completed rows        
+            Drops non completed rows
         """
 
         for index in dataframe.index:
 
             # Removing non completed trips
-            dataframe.drop(dataframe[dataframe['Trip or Order Status'] != "COMPLETED"].index, inplace = True)
-
+            dataframe.drop(
+                dataframe[dataframe["Trip or Order Status"] != "COMPLETED"].index,
+                inplace=True,
+            )
 
     @staticmethod
     def types_all_upper(dataframe: pd.DataFrame) -> None:
 
         """
         Turning every Product Type in Upper case, so all UberX rides fit in the same category
-        
+
         Args:
             Dataframe: pd.DataFrame. The Dataframe that'll be changed
         Returns:
             Changes every product type to upper case
         """
 
-        dataframe['Product Type'] = dataframe['Product Type'].apply(lambda s: str.upper(s))
-
+        dataframe["Product Type"] = dataframe["Product Type"].apply(
+            lambda s: str.upper(s)
+        )
 
     @staticmethod
     def check_city(dataframe: pd.DataFrame) -> None:
@@ -64,7 +66,7 @@ class Transform:
         """
         This functions checks if there is the string "Jundiaí" in the Address column.
         If true, it'll change the city column to Jundiaí as well.
-        
+
         Args:
             Dataframe: pd.DataFrame. The Dataframe that'll be changed
         Returns:
