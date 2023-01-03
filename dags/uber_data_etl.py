@@ -111,7 +111,19 @@ def taskflow():
 
         df = pd.DataFrame(data=sql_query, columns=RAW_COLUMNS)
 
-        logger.info(f'{df}')
+        logger.info("Starting transformation...")
+
+        logger.info("[1] Removing trips not completed...")
+        Transform.remove_not_completed(dataframe=df)
+        
+        logger.info("[2] Changing all trips types to uppercase...")
+        Transform.types_all_upper(dataframe=df)
+
+        logger.info("[3] Checking if cities are correct...")
+        Transform.check_city(dataframe=df)
+
+        logger.info("[4] All passed: writing result df to CSV...")
+        df.to_csv('./dags/transformed_data.csv', encoding='utf-8', index=False)
 
     # [Workflow] Defining the DAG tasks workflow.
     create_tables() >> extract() >> transform()

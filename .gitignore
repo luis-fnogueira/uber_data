@@ -3,3 +3,4 @@ original_trips_data.csv
 logs/*
 __pycache__
 explo.ipynb
+transformed_data.csv
