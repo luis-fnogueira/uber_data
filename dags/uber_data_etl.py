@@ -112,7 +112,6 @@ def taskflow():
         df = pd.DataFrame(data=sql_query, columns=RAW_COLUMNS)
 
         logger.info("Starting transformation...")
-
         logger.info("[1] Removing trips not completed...")
         Transform.remove_not_completed(dataframe=df)
         
@@ -125,7 +124,17 @@ def taskflow():
         logger.info("[4] All passed: writing result df to CSV...")
         df.to_csv('./dags/transformed_data.csv', encoding='utf-8', index=False)
 
+
+    @task(task_id="load")
+    def load():
+        logger.info("[LOADING] Reading data to CSV")
+        df = pd.read_csv(filepath_or_buffer="./dags/transformed_data.csv")
+               
+        logger.info("[LOADING] Inserting data in Postgres")
+        db = Postgres(credentials=PARAMS)
+        db.send_data(data=df, table_name="structured_data", schema="uber_data")
+
     # [Workflow] Defining the DAG tasks workflow.
-    create_tables() >> extract() >> transform()
+    create_tables() >> extract() >> transform() >> load()
 
 dag = taskflow()
