@@ -42,30 +42,12 @@ default_args = {
     "catchup"         : False
 }
 
-# Defining the DAG parameters.
-#
-# dag_id           : The id of the DAG.
-# schedule_interval: Defines how often that DAG runs, this timedelta object
-#                    gets added to your latest task instance’s execution_date
-#                    to figure out the next schedule.
-# dagrun_timeout   : Specify how long a DagRun should be up before timing out
-#                    / failing, so that new DagRuns can be created. The timeout
-#                    is only enforced for scheduled DagRuns, and only once the
-#                    # of active DagRuns == max_active_runs.
-# catchup          : Perform scheduler catchup (or only run latest)?
-#                    Defaults to True.
-# default_args     : Definning a dictionary of default parameters to be used as
-#                    constructor keyword parameters when initialising
-#                    operators.
-# max_active_runs  : Maximum number of active DAG runs, beyond this number of
-#                    DAG runs in a running state, the scheduler won’t create
-#                    new active DAG runs.
+
 
 doc_md = """
 ### Uber data ETL
 #### Purpose
 This DAG triggers a ETL process of Uber related data.
-
 """
 
 dag_params = {
@@ -102,7 +84,7 @@ def taskflow():
     def extract():
 
         logger.info("[LOADING] Reading data to CSV")
-        df = pd.read_csv(filepath_or_buffer="/home/luis-fnogueira/projects/personal/uber_data/dags/uber_data/original_trips_data.csv")
+        df = pd.read_csv(filepath_or_buffer="/opt/airflow/dags/original_trips_data.csv")
                
         logger.info("[LOADING] Removing timezone substring from columns")
         cols = ["Request Time", "Begin Trip Time", "Dropoff Time"]
@@ -112,7 +94,26 @@ def taskflow():
         db = Postgres(credentials=PARAMS)
         db.send_data(data=df, table_name="raw_data", schema="uber_data")
 
+    @task(task_id="transform")
+    def transform():
+
+        conn = Postgres(credentials=PARAMS)
+
+        sql_query = pd.read_sql_query(sql=Sqls.READ_RAW_DATA,
+                                      con=conn.get_conn())
+
+        RAW_COLUMNS = [
+        "City", "Product Type", "Trip or Order Status", "Request Time",
+        "Begin Trip Time", "Begin Trip Lat", "Begin Trip Lng", "Begin Trip Address",
+        "Dropoff Time", "Dropoff Lat", "Dropoff Lng", "Dropoff Address",
+        "Distance (miles)", "Fare Amount", "Fare Currency"
+        ]
+
+        df = pd.DataFrame(data=sql_query, columns=RAW_COLUMNS)
+
+        logger.info(f'{df}')
+
     # [Workflow] Defining the DAG tasks workflow.
-    create_tables() >> extract()
+    create_tables() >> extract() >> transform()
 
 dag = taskflow()

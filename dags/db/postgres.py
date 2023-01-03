@@ -17,7 +17,7 @@ class Postgres:
         self.URI = f"postgresql://{credentials['user']}:{credentials['password']}@{credentials['host']}:{credentials['port']}/{credentials['database']}"
 
 
-    def __get_conn(self):
+    def get_conn(self):
 
         try:
 
@@ -46,7 +46,7 @@ class Postgres:
 
         """
 
-        conn = self.__get_conn()
+        conn = self.get_conn()
         cur = conn.cursor()
 
         cur.execute(query=query, vars=(vars, ))
