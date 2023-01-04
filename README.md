@@ -7,7 +7,7 @@ Go to https://myprivacy.uber.com/privacy/exploreyourdata/download, log in and cl
 
 After a while (maybe a couple days), you'll receive an e-mail from Uber saying that your data is ready to be downloaded. Once you download it, you'll have a zip file with a few folders. We'll use the **Rider/trips_data.csv**
 
-[![image](https://i.imgur.com/jQuegIA.png)]
+![image](https://i.imgur.com/jQuegIA.png)
 
 ### 2. A few considerations
 
